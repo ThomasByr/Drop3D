@@ -1,0 +1,8 @@
+__title__ = "drop3d"
+__description__ = "A 3d water drop simulator"
+__url__ = "https://github.com/ThomasByr/Drop3D"
+__version__ = "0.0.1"
+__author__ = "Thomas Byr"
+__author_email__ = "thomas-c2000@outlook.com"
+__license__ = "GNU GPLv3"
+# __copyright__ = "Copyright (c) 2021 Thomas Byr"
