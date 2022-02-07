@@ -51,6 +51,7 @@ class Vector(np.ndarray):
             the z-component of the vector
     ```
     """
+
     def __new__(cls, *args: Union[int, float]) -> "Vector":
         """
         new Vector instance
@@ -302,8 +303,9 @@ class Vector(np.ndarray):
         Modifies the Vector and invert each coordinate\\
         deal with possible division by 0 warning
         """
+
         def invert(x: float) -> float:
-            return (1 / x, x)[abs(x) < EPSILON]
+            return x if abs(x) < EPSILON else 1 / x
 
         self.x, self.y, self.z = tuple(map(invert, self))
 
@@ -311,8 +313,9 @@ class Vector(np.ndarray):
         """
         Modifies the Vector and change inf coordinates to 0
         """
+
         def catch(x: float) -> float:
-            return (0, x)[bool(x < np.inf)]
+            return x if bool(x < np.inf) else 0
 
         self.x, self.y, self.z = tuple(map(catch, self))
 
