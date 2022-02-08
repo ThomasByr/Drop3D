@@ -67,8 +67,7 @@ If this function is called without any argument, it will simply return the curre
 <summary>scene</summary>
 
 ```py
-def scene(
-    x_min: float = None, x_max: float = None, y_min: float = None, y_max: float = None, z_min: float = None, z_max: float = None) -> Union[None, list[list[float]]]
+def scene(x_min: float = None, x_max: float = None, y_min: float = None, y_max: float = None, z_min: float = None, z_max: float = None) -> Union[None, list[list[float]]]
 ```
 
 This is used to set the scene when randomly generating drops. The center of each drop will be randomly picked in the respective range for each axis. The distribution is here uniform.
