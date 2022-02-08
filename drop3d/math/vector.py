@@ -612,9 +612,9 @@ class Vector(np.ndarray):
 
     def project(self, axis: Union[str, "Vector"] = "z") -> None:
         """
-        project the new vector onto the given axis\\
+        project the new vector against the given axis\\
         meaning that the vector will be perpendicular to the given axis\\
-        please provide an axis vector or a string of unit length 1
+        please provide an axis vector (or a string) of unit length 1
 
         Parameters
         ----------
@@ -625,14 +625,14 @@ class Vector(np.ndarray):
         ```
         """
         axis = self._get_axis(axis)
-        v = self * axis
+        v = self.dot(axis) * axis
         self -= v
 
     def projected(self, axis: Union[str, "Vector"] = "z") -> "Vector":
         """
-        project the vector onto the given axis and return a new vector\\
+        project the vector against the given axis and return a new vector\\
         meaning that the vector will be perpendicular to the given axis\\
-        please provide an axis vector or a string of unit length 1
+        please provide an axis vector (or a string) of unit length 1
 
         Parameters
         ----------
@@ -649,7 +649,7 @@ class Vector(np.ndarray):
         ```
         """
         axis = self._get_axis(axis)
-        v = self * axis
+        v = self.dot(axis) * axis
         return self - v
 
     def get_angle(self, axis: Union[str, "Vector"] = "z") -> float:
