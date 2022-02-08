@@ -72,7 +72,7 @@ def scene(x_min: float = None, x_max: float = None, y_min: float = None, y_max: 
 
 This is used to set the scene when randomly generating drops. The center of each drop will be randomly picked in the respective range for each axis. The distribution is here uniform.
 
-If this function is called without any argument, it will simply return the current scene (as an list of list of floating point numbers).
+If this function is called without any argument, it will simply return the current scene (as a list of lists of floating point numbers).
 
 </details>
 
@@ -109,7 +109,7 @@ This function returns an iterator that yields intergers.
 def as_surface(drop: int = None) -> tuple[list[float], list[float], list[float]]
 ```
 
-This function is used to export data of a yielded drop id (see `each_drop` function). The user can get a list of coordinates in the form (xs, ys, zs) where .s holds a list of floating point numbers. Basically, xs[i] ,ys[i], z[i] is the 3d coodinate of the i-th generated drop.
+This function is used to export data of a yielded drop id (see `each_drop` function). The user can get a list of coordinates in the form (xs, ys, zs) where .s holds a list of floating point numbers. Basically, xs[i] ,ys[i], z[i] are the 3d coordinates of the i-th generated drop.
 
 This function returns a tuple of 3 lists containing floating point numbers.
 
