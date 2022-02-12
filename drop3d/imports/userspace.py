@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Iterable, Union
+from typing import Any, Iterable
 
 import random as r
 
@@ -57,7 +57,7 @@ def _get_params(*args, **kwargs) -> dict[str, Any]:
     return params
 
 
-def gen_mode(mode: GenMode = None) -> Union[None, GenMode]:
+def gen_mode(mode: GenMode = None) -> None | GenMode:
     """
     set the generation mode\\
     if called with no arguments, returns the current generation mode
@@ -75,7 +75,7 @@ def gen_mode(mode: GenMode = None) -> Union[None, GenMode]:
     _gen_mode = mode
 
 
-def precision(n: int = None) -> Union[None, int]:
+def precision(n: int = None) -> None | int:
     """
     set the precision of the drop\\
     if called with no arguments, returns the current precision
@@ -94,7 +94,7 @@ def precision(n: int = None) -> Union[None, int]:
     _precision = n
 
 
-def squish(s: float = None) -> Union[None, float]:
+def squish(s: float = None) -> None | float:
     """
     set the amount of noise for the drop\\
     if called with no arguments, returns the current squish constant
@@ -120,7 +120,7 @@ def scene(
     y_max: float = None,
     z_min: float = None,
     z_max: float = None,
-) -> Union[None, list[list[float]]]:
+) -> None | list[list[float]]:
     """
     set the scene (the range for the drops generation)\\
     if called with no arguments, returns the current scene
