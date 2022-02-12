@@ -12,7 +12,7 @@ plt.close()
 plt.clf()
 plt.cla()
 fig = plt.figure(0)
-ax = fig.add_subplot(111, projection='3d')
+ax = fig.add_subplot(111, projection="3d")
 
 for drop in each_drop():
     x, y, z = as_surface(drop)

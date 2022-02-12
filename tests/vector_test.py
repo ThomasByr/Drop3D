@@ -64,3 +64,20 @@ def test_vector_6() -> None:
     assert v.projected(x).x == approx(0)
     assert v.projected(y).y == approx(0)
     assert v.projected(z).z == approx(0)
+
+
+def test_vector_7() -> None:
+    v = Vector.random3d()
+    w = Vector.random2d()
+    z = Vector(0, 0, 1)
+
+    a = b = c = 1
+    x = (a*v + b*w) / c
+    y = v @ w
+    assert isinstance(x, Vector) == True
+    assert isinstance(y, float) == True
+
+    assert w.projected(z) == w
+    assert v.projected(z).cross(w).x == approx(0)
+    assert v.projected(z).cross(w).y == approx(0)
+    assert v.projected(z).cross(w).z != approx(0)
