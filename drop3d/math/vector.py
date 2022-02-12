@@ -1,7 +1,7 @@
 from collections import namedtuple
 import random
 import math as m
-from typing import Union, Type
+from typing import NewType, Type
 import numpy as np
 
 __all__ = ["Vector"]
@@ -12,13 +12,15 @@ EPSILON = 1e-8
 Point = namedtuple("Point", ["x", "y", "z"])
 Point.__new__.__defaults__ = (0, 0, 0)
 
+Vector = NewType("Vector", Point)
+
 
 class Vector(np.ndarray):
     """
     Vector
     ======
     provides :
-    1. Vector support for `python 3.9` and upper in two or three dimensional space
+    1. Vector support for `python 3.10` and upper in two or three dimensional space
     2. Fast standards operations using numpy
     3. Full random support plus ndarray and p5 compatibility
 
@@ -52,7 +54,7 @@ class Vector(np.ndarray):
     ```
     """
 
-    def __new__(cls, *args: Union[int, float]) -> "Vector":
+    def __new__(cls, *args: int | float) -> Vector:
         """
         new Vector instance
 
@@ -74,12 +76,12 @@ class Vector(np.ndarray):
         obj = np.asarray(a, dtype=np.float64).view(cls)
         return obj
 
-    def __eq__(self, other: "Vector") -> bool:
+    def __eq__(self, other: Vector) -> bool:
         if self.shape == other.shape:
             return bool(np.all(np.absolute(self - other) <= EPSILON))
         return False
 
-    def __ne__(self, other: "Vector") -> bool:
+    def __ne__(self, other: Vector) -> bool:
         if self.shape == other.shape:
             return bool(np.any(np.absolute(self - other) > EPSILON))
         return True
@@ -89,34 +91,34 @@ class Vector(np.ndarray):
         fvalues = (class_name, self.x, self.y, self.z)
         return "{}({:.2f}, {:.2f}, {:.2f})".format(*fvalues)
 
-    def __add__(self, other: "Vector") -> "Vector":
+    def __add__(self, other: Vector) -> Vector:
         return super().__add__(other)
 
-    def __sub__(self, other: "Vector") -> "Vector":
+    def __sub__(self, other: Vector) -> Vector:
         return super().__sub__(other)
 
-    def __mul__(self, other: Union[float, int, "Vector"]) -> "Vector":
+    def __mul__(self, other: float | int | Vector) -> Vector:
         return super().__mul__(other)
 
-    def __rmul__(self, other: Union[float, int, "Vector"]) -> "Vector":
+    def __rmul__(self, other: float | int | Vector) -> Vector:
         return super().__rmul__(other)
 
-    def __matmul__(self, other: "Vector") -> float:
+    def __matmul__(self, other: Vector) -> float:
         return self.dot(other)
 
-    def __rmatmul__(self, other: "Vector") -> float:
+    def __rmatmul__(self, other: Vector) -> float:
         return self.dot(other)
 
-    def __truediv__(self, other: Union[float, int, "Vector"]) -> "Vector":
+    def __truediv__(self, other: float | int | Vector) -> Vector:
         return super().__truediv__(other)
 
-    def __floordiv__(self, other: Union[float, int, "Vector"]) -> "Vector":
+    def __floordiv__(self, other: float | int | Vector) -> Vector:
         return super().__floordiv__(other)
 
-    def __rtruediv__(self, other: Union[float, int, "Vector"]) -> "Vector":
+    def __rtruediv__(self, other: float | int | Vector) -> Vector:
         return super().__truediv__(other)
 
-    def __rfloordiv__(self, other: Union[float, int, "Vector"]) -> "Vector":
+    def __rfloordiv__(self, other: float | int | Vector) -> Vector:
         return super().__floordiv__(other)
 
     @property
@@ -154,8 +156,8 @@ class Vector(np.ndarray):
 
     def __getitem__(
         self,
-        key: Union[int, slice],
-    ) -> Union[int, float, np.ndarray]:
+        key: int | slice,
+    ) -> int | float | np.ndarray:
 
         if isinstance(key, slice):
             return np.array([self[i] for i in range(*key.indices(len(self)))])
@@ -163,8 +165,8 @@ class Vector(np.ndarray):
 
     def __setitem__(
         self,
-        key: Union[int, slice],
-        value: Union[int, float, list[Union[int, float]]],
+        key: int | slice,
+        value: int | float | list[int | float],
     ) -> None:
         if isinstance(key, slice):
             for i, v in zip(range(*key.indices(len(self))), value):
@@ -174,7 +176,7 @@ class Vector(np.ndarray):
 
     def __delitem__(
         self,
-        key: Union[int, slice],
+        key: int | slice,
     ) -> None:
         if isinstance(key, slice):
             for i in range(*key.indices(len(self))):
@@ -228,7 +230,7 @@ class Vector(np.ndarray):
             z = self.z
         self.x, self.y, self.z = x, y, z
 
-    def lerp(self, other: "Vector", amount: float) -> "Vector":
+    def lerp(self, other: Vector, amount: float) -> Vector:
         """
         Linearly interpolate from one point to another
 
@@ -251,7 +253,7 @@ class Vector(np.ndarray):
         x, y, z = self + amount * (other-self)
         return self.__class__(x, y, z)
 
-    def rounded(self, ndigits: int = 0) -> "Vector":
+    def rounded(self, ndigits: int = 0) -> Vector:
         """
         Returns a Vector whom cordinates has been rounded with the given precision
 
@@ -285,7 +287,7 @@ class Vector(np.ndarray):
         """
         self.x, self.y, self.z = tuple(map(lambda x: round(x, ndigits), self))
 
-    def inverted(self) -> "Vector":
+    def inverted(self) -> Vector:
         """
         Returns a Vector whom coordinates have been inverted, i.e. raised to power -1\\
         you might want to call `catch_inf` afterwards
@@ -319,7 +321,7 @@ class Vector(np.ndarray):
 
         self.x, self.y, self.z = tuple(map(catch, self))
 
-    def cross(self, other: "Vector") -> "Vector":
+    def cross(self, other: Vector) -> Vector:
         """
         Return the cross product of the two vectors
 
@@ -347,7 +349,7 @@ class Vector(np.ndarray):
         x, y, z = np.cross(self, other)
         return self.__class__(x, y, z)
 
-    def dot(self, other: "Vector") -> float:
+    def dot(self, other: Vector) -> float:
         """
         Computes the dot product of two vectors
 
@@ -375,7 +377,7 @@ class Vector(np.ndarray):
         return np.dot(self, other)
 
     @classmethod
-    def random(cls, v1: float, v2: float, size: int = 3, dtype: Type[Union[float, int]] = float) -> "Vector":
+    def random(cls, v1: float, v2: float, size: int = 3, dtype: Type[float | int] = float) -> Vector:
         """
         Creates a random generated Vector\\
         both `v1` and `v2` are included
@@ -422,7 +424,7 @@ class Vector(np.ndarray):
         return cls(x, y, z)
 
     @classmethod
-    def random2d(cls, mag: float = 1) -> "Vector":
+    def random2d(cls, mag: float = 1) -> Vector:
         """
         Generates a random 2d vector with an optional desired magnitude
         """
@@ -432,7 +434,7 @@ class Vector(np.ndarray):
         return vec
 
     @classmethod
-    def random3d(cls, mag: float = 1) -> "Vector":
+    def random3d(cls, mag: float = 1) -> Vector:
         """
         Generates a random 3d vector with an optional desired magnitude
         """
@@ -441,7 +443,7 @@ class Vector(np.ndarray):
         vec.magnitude = mag
         return vec
 
-    def copy(self) -> "Vector":
+    def copy(self) -> Vector:
         """
         Return a copy of the current point
 
@@ -504,7 +506,7 @@ class Vector(np.ndarray):
         assert not self.magnitude == 0, "vector has magnitude 0, can't normalize"
         self.magnitude = 1
 
-    def normalized(self) -> "Vector":
+    def normalized(self) -> Vector:
         """
         Returns a copy of the current vector with a magnitude of 1
         """
@@ -528,7 +530,7 @@ class Vector(np.ndarray):
         elif m > upper:
             self.magnitude = upper
 
-    def limited(self, upper: float = None, lower: float = None) -> "Vector":
+    def limited(self, upper: float = None, lower: float = None) -> Vector:
         """
         Returns a new vector whom magnitude has been kept under or above a given limit
         """
@@ -545,7 +547,7 @@ class Vector(np.ndarray):
             other.magnitude = upper
         return other
 
-    def distance(self, other: "Vector") -> float:
+    def distance(self, other: Vector) -> float:
         """
         Return the distance between two points
 
@@ -564,7 +566,7 @@ class Vector(np.ndarray):
         """
         return m.sqrt(sum((v := (self - other)) * v))
 
-    def distance_sq(self, other: "Vector") -> float:
+    def distance_sq(self, other: Vector) -> float:
         """
         Return the squared distance between two points
 
@@ -584,7 +586,7 @@ class Vector(np.ndarray):
         return sum((v := (self - other)) * v)
 
     @classmethod
-    def _get_axis(cls, axis: Union[str, "Vector"] = "z") -> "Vector":
+    def _get_axis(cls, axis: str | Vector = "z") -> Vector:
         if isinstance(axis, str):
             axis = axis.lower()
             if axis == "x":
@@ -601,7 +603,7 @@ class Vector(np.ndarray):
         return axis
 
     @classmethod
-    def _next_axis(cls, axis: "Vector") -> "Vector":
+    def _next_axis(cls, axis: Vector) -> Vector:
         if axis == Vector(1, 0, 0):
             return Vector(0, 1, 0)
         elif axis == Vector(0, 1, 0):
@@ -610,7 +612,7 @@ class Vector(np.ndarray):
             return Vector(1, 0, 0)
         return None
 
-    def project(self, axis: Union[str, "Vector"] = "z") -> None:
+    def project(self, axis: str | Vector = "z") -> None:
         """
         project the new vector against the given axis\\
         meaning that the vector will be perpendicular to the given axis\\
@@ -628,7 +630,7 @@ class Vector(np.ndarray):
         v = self.dot(axis) * axis
         self -= v
 
-    def projected(self, axis: Union[str, "Vector"] = "z") -> "Vector":
+    def projected(self, axis: str | Vector = "z") -> Vector:
         """
         project the vector against the given axis and return a new vector\\
         meaning that the vector will be perpendicular to the given axis\\
@@ -652,7 +654,7 @@ class Vector(np.ndarray):
         v = self.dot(axis) * axis
         return self - v
 
-    def get_angle(self, axis: Union[str, "Vector"] = "z") -> float:
+    def get_angle(self, axis: str | Vector = "z") -> float:
         """
         get the angle of the vector with respect to the given axis\\
         please provide an axis vector or a string of unit length 1
@@ -676,7 +678,7 @@ class Vector(np.ndarray):
         base = self._next_axis(axis)
         return np.arccos(np.dot(v, base) / v.magnitude)
 
-    def set_angle(self, angle: float, axis: Union[str, "Vector"] = "z") -> None:
+    def set_angle(self, angle: float, axis: str | Vector = "z") -> None:
         """
         set the angle of the vector with respect to the given axis\\
         please provide an axis vector or a string of unit length 1
@@ -694,7 +696,7 @@ class Vector(np.ndarray):
         axis = self._get_axis(axis)
         self.rotate(angle - self.get_angle(axis), axis)
 
-    def rotate(self, angle: float, axis: Union[str, "Vector"] = "z") -> None:
+    def rotate(self, angle: float, axis: str | Vector = "z") -> None:
         """
         rotate the current vector by a given angle in randians
 
@@ -712,7 +714,7 @@ class Vector(np.ndarray):
         sin, cos = m.sin(angle), m.cos(angle)
         self[:] = cos*self + sin * axis.cross(self) + (1-cos) * axis * axis.dot(self)
 
-    def rotated(self, angle: float, axis: Union[str, "Vector"] = "z") -> "Vector":
+    def rotated(self, angle: float, axis: str | Vector = "z") -> Vector:
         """
         return a new vector which have been rotated by a given angle in randians
 
@@ -736,7 +738,7 @@ class Vector(np.ndarray):
         sin, cos = m.sin(angle), m.cos(angle)
         return cos*self + sin * axis.cross(self) + (1-cos) * axis * axis.dot(self)
 
-    def angle_between(self, other: "Vector") -> float:
+    def angle_between(self, other: Vector) -> float:
         """
         Calculate the angle between two vectors
 
@@ -763,7 +765,7 @@ class Vector(np.ndarray):
         return np.arccos((np.dot(self, other)) / (self.magnitude * other.magnitude))
 
     @classmethod
-    def from_angle(cls, angle: float) -> "Vector":
+    def from_angle(cls, angle: float) -> Vector:
         """
         Return a new unit vector with the given angle
 
