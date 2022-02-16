@@ -5,7 +5,7 @@ import random as r
 
 from ..core import *
 
-__all__ = ["GenMode", "gen_mode", "precision", "squish", "scene", "create_drop", "each_drop", "as_surface"]
+__all__ = ["GenMode", "MeshMode", "gen_mode", "mesh_mode", "precision", "squish", "scene", "create_drop", "each_drop", "as_surface"]
 
 
 class GenMode(Enum):
@@ -18,9 +18,20 @@ class GenMode(Enum):
     FIXED = "fixed"
 
 
+class MeshMode(Enum):
+    """
+    Control of the method to generate points on the surface of the drop\\
+    `RANDOM` - will generate a point at a random position\\
+    `FIXED` - will generate a point at a specified position
+    """
+    UNIFORM = "uniform"
+    RANDOM = "random"
+
+
 _precision = 360
 _squish = 10.
 _gen_mode = GenMode.FIXED
+_mesh_mode = MeshMode.UNIFORM
 _scene = [[-1., 1.], [-1., 1.], [-1., 1.]]
 
 _drops: list[Drop] = []
@@ -35,12 +46,15 @@ def _get_params(*args, **kwargs) -> dict[str, Any]:
 
     l: list[str] = ["min_r", "max_r"]
 
-    if _gen_mode == GenMode.RANDOM:
-        params["x"] = r.uniform(_scene[0][0], _scene[0][1])
-        params["y"] = r.uniform(_scene[1][0], _scene[1][1])
-        params["z"] = r.uniform(_scene[2][0], _scene[2][1])
-    elif _gen_mode == GenMode.FIXED:
-        l = ["x", "y", "z", "min_r", "max_r"]
+    match _gen_mode:
+        case GenMode.RANDOM:
+            params["x"] = r.uniform(_scene[0][0], _scene[0][1])
+            params["y"] = r.uniform(_scene[1][0], _scene[1][1])
+            params["z"] = r.uniform(_scene[2][0], _scene[2][1])
+        case GenMode.FIXED:
+            l = ["x", "y", "z", "min_r", "max_r"]
+        case _:
+            raise ValueError("invalid generation mode")
 
     i = 0
     for arg in l:
@@ -54,6 +68,7 @@ def _get_params(*args, **kwargs) -> dict[str, Any]:
 
     params["n"] = _precision
     params["squish"] = _squish
+    params["random_mesh"] = _mesh_mode == MeshMode.RANDOM
     return params
 
 
@@ -73,6 +88,24 @@ def gen_mode(mode: GenMode = None) -> None | GenMode:
     if mode is None:
         return _gen_mode
     _gen_mode = mode
+
+
+def mesh_mode(mode: MeshMode=None) -> None | MeshMode:
+    """
+    set the surface generation mode\\
+    if called with no arguments, returns the current mesh mode
+
+    Parameters
+    ----------
+    ```py
+        mode : MeshMode
+            UNIFORM | RANDOM
+    ```
+    """
+    global _mesh_mode
+    if mode is None:
+        return _mesh_mode
+    _mesh_mode = mode
 
 
 def precision(n: int = None) -> None | int:
