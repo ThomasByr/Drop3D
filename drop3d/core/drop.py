@@ -14,6 +14,7 @@ def _map(x: float, x0: float, x1: float, y0: float, y1: float) -> float:
 
 
 class Drop:
+
     def __init__(
         self,
         x: float,
@@ -23,6 +24,7 @@ class Drop:
         max_r: float,
         n: int = 360,
         squish: float = 10.,
+        random_mesh: bool = False,
     ) -> None:
         self._pos = Vector(x, y, z)  # position of the center of the drop
         self._min_r = min_r  # minimum radius of the drop
@@ -36,9 +38,12 @@ class Drop:
         self._t_off = 0.  # time offset for the noise
         self._squish = squish  # squish contant for the noise
 
-        self._generate()
+        if random_mesh:
+            self._generate_rd()
+        else:
+            self._generate_un()
 
-    def _generate(self) -> None:
+    def _generate_un(self) -> None:
         self._points.clear()
         for i in range(self._n):
             theta = i * 2 * m.pi / self._n
@@ -56,6 +61,21 @@ class Drop:
                 z *= r
 
                 self._points.append(Vector(x, y, z))
+
+    def _generate_rd(self) -> None:
+        self._points.clear()
+        for _ in range(self._n * self._n):
+            v = Vector.random3d()
+            x, y, z = v[::]
+
+            s = self._squish
+            n = self._noise(x / s, y / s, z / s, self._t_off)
+            r = _map(n, -1, 1, self._min_r, self._max_r)
+            x *= r
+            y *= r
+            z *= r
+
+            self._points.append(Vector(x, y, z))
 
     def as_surface(self) -> tuple[list[float], list[float], list[float]]:
         """
