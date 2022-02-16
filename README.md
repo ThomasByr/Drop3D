@@ -31,7 +31,7 @@ Bellow are functions declared in [userspace](drop3d/imports/userspace.py) file t
 <summary>gen_mode</summary>
 
 ```py
-def gen_mode(mode: GenMode = None) -> Union[None, GenMode]
+def gen_mode(mode: GenMode = None) -> None | GenMode
 ```
 
 This is used to set the generation mode of the drops (because chances are you are going to generate many drops). The user can choose between a random spacial distribution of the drop (only the center will be randomly generated), or a manual distribution. When choosing to generate drops randomly, the range of the center of the drops will be picked inside of a given scene (see `scene` function).
@@ -40,10 +40,22 @@ If this function is called without any argument, it will simply return the curre
 </details>
 
 <details>
+<summary>mesh_mode</summary>
+
+```py
+def mesh_mode(mode: MeshMode = None) -> None | MeshMode
+```
+
+This is used to set the generation mode of the drops mesh surface. The user can choose between a random spacial distribution of the surface points, or a more uniform distribution. When choosing to generate surface points randomly, there is no guaranty that the surface won't have any holes in it. If so, please consider boosting the precision of the drop (see `precision` function).
+
+If this function is called without any argument, it will simply return the current mesh generation mode (as an enum from `MeshMode`).
+</details>
+
+<details>
 <summary>precision</summary>
 
 ```py
-def precision(n: int = None) -> Union[None, int]
+def precision(n: int = None) -> None | int
 ```
 
 This is used to specify the number of points generated along each axis, meaning, the actual drop will consist of `n*n` points (because we only use 2 axis to generate a sphere `(r, theta, phi)`. Default is 360, which will result in a lot of points. This is okay to export data (lets say to Blender for example) but can be quite slow if the goal is to visualise the drop in a cpu-base window.
@@ -55,7 +67,7 @@ If this function is called without any argument, it will simply return the curre
 <summary>squish</summary>
 
 ```py
-def squish(s: float = None) -> Union[None, float]
+def squish(s: float = None) -> None | float
 ```
 
 This is used to set the "squish constant" for the noise generation algorithm (we use Perlin noise here). The bigger the constant, the more spherical the drop. Also note that the noise will interpolate between 2 radii to create "lumps" on the surface of the drop. A value of `n` mean we take the noise values from a sphere of radius `1/n` in the noise space.
@@ -67,7 +79,7 @@ If this function is called without any argument, it will simply return the curre
 <summary>scene</summary>
 
 ```py
-def scene(x_min: float = None, x_max: float = None, y_min: float = None, y_max: float = None, z_min: float = None, z_max: float = None) -> Union[None, list[list[float]]]
+def scene(x_min: float = None, x_max: float = None, y_min: float = None, y_max: float = None, z_min: float = None, z_max: float = None) -> None | list[list[float]]
 ```
 
 This is used to set the scene when randomly generating drops. The center of each drop will be randomly picked in the respective range for each axis. The distribution is here uniform.
