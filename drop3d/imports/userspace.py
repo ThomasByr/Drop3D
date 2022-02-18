@@ -184,12 +184,12 @@ def scene(
     global _scene
     if x_min is None and x_max is None and y_min is None and y_max is None and z_min is None and z_max is None:
         return _scene
-    x_min = x_min or _scene[0][0]
-    x_max = x_max or _scene[0][1]
-    y_min = y_min or _scene[1][0]
-    y_max = y_max or _scene[1][1]
-    z_min = z_min or _scene[2][0]
-    z_max = z_max or _scene[2][1]
+    x_min = _scene[0][0] if x_min is None else x_min
+    x_max = _scene[0][1] if x_max is None else x_max
+    y_min = _scene[1][0] if y_min is None else y_min
+    y_max = _scene[1][1] if y_max is None else y_max
+    z_min = _scene[2][0] if z_min is None else z_min
+    z_max = _scene[2][1] if z_max is None else z_max
     _scene = [[x_min, x_max], [y_min, y_max], [z_min, z_max]]
 
 
