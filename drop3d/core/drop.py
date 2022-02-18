@@ -1,5 +1,4 @@
 import math as m
-import numpy as np
 
 from ..math import *
 
@@ -60,7 +59,7 @@ class Drop:
                 y *= r
                 z *= r
 
-                self._points.append(Vector(x, y, z))
+                self._points.append(Vector(x, y, z) + self._pos)
 
     def _generate_rd(self) -> None:
         self._points.clear()
@@ -75,7 +74,7 @@ class Drop:
             y *= r
             z *= r
 
-            self._points.append(Vector(x, y, z))
+            self._points.append(Vector(x, y, z) + self._pos)
 
     def as_surface(self) -> tuple[list[float], list[float], list[float]]:
         """
