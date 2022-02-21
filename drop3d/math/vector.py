@@ -45,11 +45,11 @@ class Vector(np.ndarray):
     Parameters
     ----------
     ```py
-        x : Union[int, float]
+        x : int | float
             the x-component of the vector
-        y : Union[int, float]
+        y : int | float
             the y-component of the vector
-        z : Union[int, float]
+        z : int | float
             the z-component of the vector
     ```
     """
@@ -61,7 +61,7 @@ class Vector(np.ndarray):
         Parameters
         ----------
         ```py
-            args : tuple[Union[int, float]]
+            args : tuple[int | float]
                 coordinates of the Vector, unnamed
         ```
 
@@ -621,7 +621,7 @@ class Vector(np.ndarray):
         Parameters
         ----------
         ```py
-            axis : Union[str, Vector], (optional)
+            axis : str | Vector, (optional)
                 axis
                 defaults to "z"
         ```
@@ -639,7 +639,7 @@ class Vector(np.ndarray):
         Parameters
         ----------
         ```py
-            axis : Union[str, Vector], (optional)
+            axis : str | Vector, (optional)
                 axis
                 defaults to "z"
         ```
@@ -647,7 +647,7 @@ class Vector(np.ndarray):
         Returns
         -------
         ```py
-            [type] : [description]
+            Vector : new Vector
         ```
         """
         axis = self._get_axis(axis)
@@ -662,7 +662,7 @@ class Vector(np.ndarray):
         Parameters
         ----------
         ```py
-            axis : Union[str, Vector], (optional)
+            axis : str | Vector, (optional)
                 axis vector or string of unit length 1
                 defaults to "z"
         ```
@@ -688,7 +688,7 @@ class Vector(np.ndarray):
         ```py
             angle : float
                 angle in radians
-            axis : Union[str, Vector], (optional)
+            axis : str | Vector, (optional)
                 axis vector or string of unit length 1
                 defaults to "z"
         ```
@@ -705,7 +705,7 @@ class Vector(np.ndarray):
         ```py
             angle : float
                 angle in radians
-            axis : Union[str, Vector], (optional)
+            axis : str | Vector, (optional)
                 axis to rotate around
                 defaults to "z"
         ```
@@ -723,7 +723,7 @@ class Vector(np.ndarray):
         ```py
             angle : float
                 angle in radians
-            axis : Union[str, Vector], (optional)
+            axis : str | Vector, (optional)
                 axis to rotate around
                 defaults to "z"
         ```
