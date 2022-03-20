@@ -23,4 +23,4 @@ for drop in each_drop():
     x, y, z = as_surface(drop)
     ax.scatter(x, y, z)
 
-# plt.show()
+plt.show()
