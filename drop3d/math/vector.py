@@ -1,7 +1,7 @@
 from collections import namedtuple
 import random
 import math as m
-from typing import NewType, Type
+from typing import NewType, Type, Union
 import numpy as np
 
 __all__ = ["Vector"]
@@ -54,7 +54,7 @@ class Vector(np.ndarray):
     ```
     """
 
-    def __new__(cls, *args: int | float) -> Vector:
+    def __new__(cls, *args: Union[int, float]) -> Vector:
         """
         new Vector instance
 
@@ -97,10 +97,10 @@ class Vector(np.ndarray):
     def __sub__(self, other: Vector) -> Vector:
         return super().__sub__(other)
 
-    def __mul__(self, other: float | int | Vector) -> Vector:
+    def __mul__(self, other: Union[float, int, Vector]) -> Vector:
         return super().__mul__(other)
 
-    def __rmul__(self, other: float | int | Vector) -> Vector:
+    def __rmul__(self, other: Union[float, int, Vector]) -> Vector:
         return super().__rmul__(other)
 
     def __matmul__(self, other: Vector) -> float:
@@ -109,16 +109,16 @@ class Vector(np.ndarray):
     def __rmatmul__(self, other: Vector) -> float:
         return self.dot(other)
 
-    def __truediv__(self, other: float | int | Vector) -> Vector:
+    def __truediv__(self, other: Union[float, int, Vector]) -> Vector:
         return super().__truediv__(other)
 
-    def __floordiv__(self, other: float | int | Vector) -> Vector:
+    def __floordiv__(self, other: Union[float, int, Vector]) -> Vector:
         return super().__floordiv__(other)
 
-    def __rtruediv__(self, other: float | int | Vector) -> Vector:
+    def __rtruediv__(self, other: Union[float, int, Vector]) -> Vector:
         return super().__truediv__(other)
 
-    def __rfloordiv__(self, other: float | int | Vector) -> Vector:
+    def __rfloordiv__(self, other: Union[float, int, Vector]) -> Vector:
         return super().__floordiv__(other)
 
     @property
@@ -156,8 +156,8 @@ class Vector(np.ndarray):
 
     def __getitem__(
         self,
-        key: int | slice,
-    ) -> int | float | np.ndarray:
+        key: Union[int, slice],
+    ) -> Union[int, float, np.ndarray]:
 
         if isinstance(key, slice):
             return np.array([self[i] for i in range(*key.indices(len(self)))])
@@ -165,8 +165,8 @@ class Vector(np.ndarray):
 
     def __setitem__(
         self,
-        key: int | slice,
-        value: int | float | list[int | float],
+        key: Union[int, slice],
+        value: Union[int, float, list[Union[int, float]]],
     ) -> None:
         if isinstance(key, slice):
             for i, v in zip(range(*key.indices(len(self))), value):
@@ -176,7 +176,7 @@ class Vector(np.ndarray):
 
     def __delitem__(
         self,
-        key: int | slice,
+        key: Union[int, slice],
     ) -> None:
         if isinstance(key, slice):
             for i in range(*key.indices(len(self))):
@@ -377,7 +377,7 @@ class Vector(np.ndarray):
         return np.dot(self, other)
 
     @classmethod
-    def random(cls, v1: float, v2: float, size: int = 3, dtype: Type[float | int] = float) -> Vector:
+    def random(cls, v1: float, v2: float, size: int = 3, dtype: Type[Union[float, int]] = float) -> Vector:
         """
         Creates a random generated Vector\\
         both `v1` and `v2` are included
@@ -586,7 +586,7 @@ class Vector(np.ndarray):
         return sum((v := (self - other)) * v)
 
     @classmethod
-    def _get_axis(cls, axis: str | Vector = "z") -> Vector:
+    def _get_axis(cls, axis: Union[str, Vector] = "z") -> Vector:
         if isinstance(axis, str):
             axis = axis.lower()
             if axis == "x":
@@ -612,7 +612,7 @@ class Vector(np.ndarray):
             return Vector(1, 0, 0)
         return None
 
-    def project(self, axis: str | Vector = "z") -> None:
+    def project(self, axis: Union[str, Vector] = "z") -> None:
         """
         project the new vector against the given axis\\
         meaning that the vector will be perpendicular to the given axis\\
@@ -630,7 +630,7 @@ class Vector(np.ndarray):
         v = self.dot(axis) * axis
         self -= v
 
-    def projected(self, axis: str | Vector = "z") -> Vector:
+    def projected(self, axis: Union[str, Vector] = "z") -> Vector:
         """
         project the vector against the given axis and return a new vector\\
         meaning that the vector will be perpendicular to the given axis\\
@@ -654,7 +654,7 @@ class Vector(np.ndarray):
         v = self.dot(axis) * axis
         return self - v
 
-    def get_angle(self, axis: str | Vector = "z") -> float:
+    def get_angle(self, axis: Union[str, Vector] = "z") -> float:
         """
         get the angle of the vector with respect to the given axis\\
         please provide an axis vector or a string of unit length 1
@@ -678,7 +678,7 @@ class Vector(np.ndarray):
         base = self._next_axis(axis)
         return np.arccos(np.dot(v, base) / v.magnitude)
 
-    def set_angle(self, angle: float, axis: str | Vector = "z") -> None:
+    def set_angle(self, angle: float, axis: Union[str, Vector] = "z") -> None:
         """
         set the angle of the vector with respect to the given axis\\
         please provide an axis vector or a string of unit length 1
@@ -696,7 +696,7 @@ class Vector(np.ndarray):
         axis = self._get_axis(axis)
         self.rotate(angle - self.get_angle(axis), axis)
 
-    def rotate(self, angle: float, axis: str | Vector = "z") -> None:
+    def rotate(self, angle: float, axis: Union[str, Vector] = "z") -> None:
         """
         rotate the current vector by a given angle in randians
 
@@ -714,7 +714,7 @@ class Vector(np.ndarray):
         sin, cos = m.sin(angle), m.cos(angle)
         self[:] = cos*self + sin * axis.cross(self) + (1-cos) * axis * axis.dot(self)
 
-    def rotated(self, angle: float, axis: str | Vector = "z") -> Vector:
+    def rotated(self, angle: float, axis: Union[str, Vector] = "z") -> Vector:
         """
         return a new vector which have been rotated by a given angle in randians
 

@@ -34,6 +34,7 @@ class Drop:
         self._points: list[Vector] = []  # list of points of the drop
 
         self._noise = PerlinNoise(4, unbias=True)  # perlin noise generator
+        # self._noise = OpenSimplexNoise()  # open simplex noise generator
         self._t_off = 0.  # time offset for the noise
         self._squish = squish  # squish contant for the noise
 
