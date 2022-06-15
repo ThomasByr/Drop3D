@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Any, Iterable, Union
+from typing import Any, Iterable
 
 import random as r
 
@@ -49,14 +49,24 @@ def _get_params(*args, **kwargs) -> dict[str, Any]:
 
     l: list[str] = ["min_r", "max_r"]
 
-    if _gen_mode == GenMode.RANDOM:
-        params["x"] = r.uniform(_scene[0][0], _scene[0][1])
-        params["y"] = r.uniform(_scene[1][0], _scene[1][1])
-        params["z"] = r.uniform(_scene[2][0], _scene[2][1])
-    elif _gen_mode == GenMode.FIXED:
-        l = ["x", "y", "z", "min_r", "max_r"]
-    else:
-        raise ValueError("invalid generation mode")
+    # if _gen_mode == GenMode.RANDOM:
+    #     params["x"] = r.uniform(_scene[0][0], _scene[0][1])
+    #     params["y"] = r.uniform(_scene[1][0], _scene[1][1])
+    #     params["z"] = r.uniform(_scene[2][0], _scene[2][1])
+    # elif _gen_mode == GenMode.FIXED:
+    #     l = ["x", "y", "z", "min_r", "max_r"]
+    # else:
+    #     raise ValueError("invalid generation mode")
+    
+    match _gen_mode:
+        case GenMode.RANDOM:
+            params["x"] = r.uniform(_scene[0][0], _scene[0][1])
+            params["y"] = r.uniform(_scene[1][0], _scene[1][1])
+            params["z"] = r.uniform(_scene[2][0], _scene[2][1])
+        case GenMode.FIXED:
+            l = ["x", "y", "z", "min_r", "max_r"]
+        case _:
+            raise ValueError("invalid generation mode")
 
     i = 0
     for arg in l:
@@ -74,7 +84,7 @@ def _get_params(*args, **kwargs) -> dict[str, Any]:
     return params
 
 
-def gen_mode(mode: GenMode = None) -> Union[None, GenMode]:
+def gen_mode(mode: GenMode = None) -> None | GenMode:
     """
     set the generation mode\\
     if called with no arguments, returns the current generation mode
@@ -92,7 +102,7 @@ def gen_mode(mode: GenMode = None) -> Union[None, GenMode]:
     _gen_mode = mode
 
 
-def mesh_mode(mode: MeshMode = None) -> Union[None, MeshMode]:
+def mesh_mode(mode: MeshMode = None) -> None | MeshMode:
     """
     set the surface generation mode\\
     if called with no arguments, returns the current mesh mode
@@ -110,7 +120,7 @@ def mesh_mode(mode: MeshMode = None) -> Union[None, MeshMode]:
     _mesh_mode = mode
 
 
-def precision(n: int = None) -> Union[None, int]:
+def precision(n: int = None) -> None | int:
     """
     set the precision of the drop\\
     if called with no arguments, returns the current precision
@@ -129,7 +139,7 @@ def precision(n: int = None) -> Union[None, int]:
     _precision = n
 
 
-def squish(s: float = None) -> Union[None, float]:
+def squish(s: float = None) -> None | float:
     """
     set the amount of noise for the drop\\
     if called with no arguments, returns the current squish constant
@@ -155,7 +165,7 @@ def scene(
     y_max: float = None,
     z_min: float = None,
     z_max: float = None,
-) -> Union[None, list[list[float]]]:
+) -> None | list[list[float]]:
     """
     set the scene (the range for the drops generation)\\
     if called with no arguments, returns the current scene
